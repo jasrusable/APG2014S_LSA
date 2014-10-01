@@ -1,0 +1,14 @@
+T013	T500	direction	317 28 24
+T013	T119	direction	041 17 18
+T013	T117	direction	063 29 44
+T013	T381	direction	274 53 21
+
+T444	T500	direction	337 27 03
+T444	T119	direction	044 35 48
+T444	T117	direction	065 45 19
+T444	T013	direction	071 27 48
+
+T381	T500	direction	045 06 51
+T381	T119	direction	058 14 46
+T381	T117	direction	082 30 07
+T381	T013	direction	094 53 19
