@@ -11,10 +11,15 @@ def read_coordinates_file(path='coordinates.txt'):
 	    content = f.readlines()
 	    for line in content:
 	    	coordinates.append(Coordinate(line_from_file=line))	
-	    	print line
 	return coordinates
 
-print read_coordinates_file()[0].get_type_()
 
 def read_observations_file(path='observations.txt'):
-	pass
+	observations = []
+	with open(path) as f:
+		content = f.readlines()
+		for line in content:
+			observations.append(Observation(line_from_file=line))
+	return observations
+
+print read_observations_file()[0].get_value()
