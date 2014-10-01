@@ -14,8 +14,7 @@ def read_coordinates_file(path='coordinates.txt'):
 	    	print line
 	return coordinates
 
-read_coordinates_file()
-
+print read_coordinates_file()[0].get_type_()
 
 def read_observations_file(path='observations.txt'):
 	pass
