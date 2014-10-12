@@ -1,4 +1,4 @@
-
+from coordinates import Coordinate
 
 class Observation (object):
 	from_point = None
@@ -14,16 +14,3 @@ class Observation (object):
 		self.value = value
 		self.line_from_file = line_from_file
 	
-	def get_from_point(self):
-		return self.line_from_file.split('	')[0]
-
-	def get_to_point(self):
-		return self.line_from_file.split('	')[1]
-
-	def get_type_(self):
-		return self.line_from_file.split('	')[2]
-
-	def get_value(self):
-		return self.line_from_file.split('	')[3].replace('\n', '')
-
-#class Distance (object, Observation):
