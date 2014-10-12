@@ -10,6 +10,11 @@ def ddeg_to_rad (dms):
     else:
     	return math.radians(deg + (min / 60) + (sec / 3600))
 
+def get_distance(coordinate1, coordinate2):
+	delta_y = coordinate2.y - coordinate1.y
+	delta_x = coordinate2.x - coordinate1.x
+	return math.sqrt( (delta_y**2) + (delta_x**2) )
+
 def get_coordiante_by_name(name, list_of_coordinates):
 	return_val = None
 	for coordinate in list_of_coordinates:

@@ -2,7 +2,7 @@ import math
 import numpy
 from observations import Observation
 from coordinates import Coordinate
-from utils import get_coordiante_by_name, get_set_up_points, ddeg_to_rad
+from utils import get_coordiante_by_name, get_set_up_points, ddeg_to_rad, get_distance
 
 
 def read_coordinates_file(path='coordinates.txt'):
@@ -81,8 +81,9 @@ for set_up_point_name in set_up_points:
 		if observation.from_point.name == set_up_point_name:
 			row = [0, 0] + [0] * number_of_set_ups
 			if observation.to_point.type_ == 'provisional':
-				y = 12
-				x = 123
+				d = get_distance(observation.to_point, observation.from_point)
+				y = observation.from_point.name
+				x = observation.to_point.name
 				row[0], row[1] = y, x
 				row[1 + observation_number] = -1
 				A = numpy.vstack([A, row])

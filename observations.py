@@ -13,4 +13,3 @@ class Observation (object):
 		self.type_ = type_
 		self.value = value
 		self.line_from_file = line_from_file
-	
