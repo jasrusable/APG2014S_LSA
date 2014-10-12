@@ -2,7 +2,7 @@ import math
 import numpy
 from observations import Observation
 from coordinates import Coordinate
-from utils import get_coordiante_by_name, get_number_of_set_ups
+from utils import get_coordiante_by_name, get_set_up_points, ddeg_to_rad
 
 
 def read_coordinates_file(path='coordinates.txt'):
@@ -12,13 +12,17 @@ def read_coordinates_file(path='coordinates.txt'):
 	    for line in content:
 	    	line = line.replace('\n', '')
 	    	if len(line.split('	')) == 4:
+	    		name = line.split('	')[0]
+	    		y = float(line.split('	')[1].replace('+', ''))
+	    		x = float(line.split('	')[2].replace('+', ''))
+	    		type_ = line.split('	')[3]
 		    	coordinates.append(Coordinate(
 		    		line_from_file=line,
-		    		name = line.split('	')[0],
-		    		y = line.split('	')[1],
-		    		x = line.split('	')[2],
-		    		type_ = line.split('	')[3],
-		    		))	
+		    		name = name,
+		    		y = y,
+		    		x = x,
+		    		type_ = type_,
+	    		))	
 	return coordinates
 
 
@@ -30,19 +34,30 @@ def read_observations_file(path='observations.txt'):
 		for line in content:
 			line = line.replace('\n', '')
 			if len(line.split('	')) == 4:
+				from_point = get_coordiante_by_name(line.split('	')[0], coordinates)
+				to_point = get_coordiante_by_name(line.split('	')[1], coordinates)
+				type_ = line.split('	')[2]
+				if type_ == 'direction':
+					value = ddeg_to_rad(line.split('	')[3].split(' '))
+				elif type_ == 'distance':
+					value = float(line.split('	')[3])
+				else:
+					raise Exception('Dont the type of obseravtion')
 				observations.append(Observation(
 					line_from_file=line,
-					from_point = get_coordiante_by_name(line.split('	')[0], coordinates),
-					to_point = get_coordiante_by_name(line.split('	')[1], coordinates),
-					type_ = line.split('	')[2],
-					value = line.split('	')[3],
-					))
+					from_point = from_point,
+					to_point = to_point,
+					type_ = type_,
+					value = value,
+				))
 	return observations
 
 observations = read_observations_file()
 
-number_of_set_ups = get_number_of_set_ups(observations)
 
+set_up_points = get_set_up_points(observations)
+
+number_of_set_ups = len(set_up_points)
 
 A = numpy.matrix([
 		[0, 0] + [0] * number_of_set_ups,
@@ -59,8 +74,22 @@ P = numpy.matrix([
     ])
 P = numpy.delete(P, (0), axis=0)
 
-number_of_unique_set_ups = None
 
-for observation in observations:
+observation_number = 1
+for set_up_point_name in set_up_points:
+	for observation in observations:
+		if observation.from_point.name == set_up_point_name:
+			row = [0, 0] + [0] * number_of_set_ups
+			if observation.to_point.type_ == 'provisional':
+				y = 12
+				x = 123
+				row[0], row[1] = y, x
+				row[1 + observation_number] = -1
+				A = numpy.vstack([A, row])
+			if observation.to_point.type_ == 'fixed':
+				row[1 + observation_number] = -1
+				A = numpy.vstack([A, row])
 
-	number_of_unique_set_ups = len(set(observations))
+	observation_number = observation_number + 1
+
+print A
