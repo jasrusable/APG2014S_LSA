@@ -26,7 +26,6 @@ def read_coordinates_file(path='coordinates.txt'):
 	    		))	
 	return coordinates
 
-
 def read_observations_file(path='observations.txt'):
 	coordinates = read_coordinates_file()
 	observations = []
@@ -54,10 +53,7 @@ def read_observations_file(path='observations.txt'):
 	return observations
 
 observations = read_observations_file()
-
-
 set_up_points = get_set_up_points(observations)
-
 number_of_set_ups = len(set_up_points)
 
 A = numpy.matrix([
@@ -87,20 +83,23 @@ for set_up_point_name in set_up_points:
 	for observation in observations:
 		if observation.from_point.name == set_up_point_name:
 			row = [0, 0] + [0] * number_of_set_ups
-			if observation.to_point.type_ == 'provisional':
-				d = get_distance(observation.to_point, observation.from_point)
-				y = 206264.8 * (observation.to_point.x - observation.from_point.x) / d**2
-				x = -206264.8 * (observation.to_point.y - observation.from_point.y) / d**2
-				row[0], row[1] = y, x
-				row[1 + observation_number] = -1
-				A = numpy.vstack([A, row])
-			if observation.to_point.type_ == 'fixed':
-				n = n + 1
-				row[1 + observation_number] = -1
-				A = numpy.vstack([A, row])
-			observed = observation.value
-			calculated = get_direction(observation.from_point, observation.to_point)
-			l = numpy.vstack([l, (math.degrees(observed-calculated)*3600)])
+			if observation.type_ == 'direction':
+				if observation.to_point.type_ == 'provisional':
+					d = get_distance(observation.to_point, observation.from_point)
+					y = 206264.8 * (observation.to_point.x - observation.from_point.x) / d**2
+					x = -206264.8 * (observation.to_point.y - observation.from_point.y) / d**2
+					row[0], row[1] = y, x
+					row[1 + observation_number] = -1
+					A = numpy.vstack([A, row])
+				if observation.to_point.type_ == 'fixed':
+					n = n + 1
+					row[1 + observation_number] = -1
+					A = numpy.vstack([A, row])
+				observed = observation.value
+				calculated = get_direction(observation.from_point, observation.to_point)
+				l = numpy.vstack([l, (math.degrees(observed-calculated)*3600)])
+			if observation.type_ == 'distance':
+				
 
 	observation_number = observation_number + 1
 
@@ -110,4 +109,4 @@ V = (A * X) - l
 
 variance_factor = (V.T * V) / (n - (2 + number_of_set_ups) )
 
-print variance_factor
+print X

@@ -12,3 +12,7 @@ T381	T500	direction	045 06 51
 T381	T119	direction	058 14 46
 T381	T117	direction	082 30 07
 T381	T013	direction	094 53 19
+
+T500	T444	distance	1141.081
+T500	T381	distance	1104.278
+T500	T013	distance	1245.972
