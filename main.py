@@ -3,6 +3,7 @@ import numpy
 from observations import Observation
 from coordinates import Coordinate
 from utils import get_coordiante_by_name, get_set_up_points, ddeg_to_rad, get_distance
+from utils import get_direction
 
 
 def read_coordinates_file(path='coordinates.txt'):
@@ -83,14 +84,17 @@ for set_up_point_name in set_up_points:
 			if observation.to_point.type_ == 'provisional':
 				d = get_distance(observation.to_point, observation.from_point)
 				y = 206264.8 * (observation.to_point.x - observation.from_point.x) / d**2
-				x = 206264.8 * (observation.to_point.y - observation.from_point.y) / d**2
+				x = -206264.8 * (observation.to_point.y - observation.from_point.y) / d**2
 				row[0], row[1] = y, x
 				row[1 + observation_number] = -1
 				A = numpy.vstack([A, row])
 			if observation.to_point.type_ == 'fixed':
 				row[1 + observation_number] = -1
 				A = numpy.vstack([A, row])
+			observed = observation.value
+			calculated = get_direction(observation.from_point, observation.to_point)
+			l = numpy.vstack([l, (math.degrees(observed-calculated)*3600)])
 
 	observation_number = observation_number + 1
 
-print A
+print l

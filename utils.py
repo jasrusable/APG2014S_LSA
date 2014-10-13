@@ -30,3 +30,18 @@ def get_set_up_points(observations):
 	for observation in observations:
 		from_points.append(observation.from_point.name)
 	return list(set(from_points))
+
+def get_direction(coordinate1, coordinate2):
+    delta_y = coordinate2.y - coordinate1.y
+    delta_x = coordinate2.x - coordinate1.x
+    direction = math.atan2(delta_y,delta_x)
+    if delta_x < 0 and delta_y > 0:
+        direction = direction 
+
+    elif delta_x < 0 and delta_y < 0:
+        direction = direction + math.pi
+
+    elif delta_x > 0 and delta_y < 0:
+        direction = direction + 2*math.pi
+
+    return direction
