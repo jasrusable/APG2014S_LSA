@@ -82,8 +82,8 @@ for set_up_point_name in set_up_points:
 			row = [0, 0] + [0] * number_of_set_ups
 			if observation.to_point.type_ == 'provisional':
 				d = get_distance(observation.to_point, observation.from_point)
-				y = observation.from_point.name
-				x = observation.to_point.name
+				y = 206264.8 * (observation.to_point.x - observation.from_point.x) / d**2
+				x = 206264.8 * (observation.to_point.y - observation.from_point.y) / d**2
 				row[0], row[1] = y, x
 				row[1 + observation_number] = -1
 				A = numpy.vstack([A, row])
