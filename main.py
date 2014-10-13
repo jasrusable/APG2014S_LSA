@@ -75,8 +75,14 @@ P = numpy.matrix([
     ])
 P = numpy.delete(P, (0), axis=0)
 
+i = 0
+for observation in observations:
+	P = numpy.vstack([P, [0] * len(observations) ])
+	P.itemset((i, i), 1)
+	i = i + 1
 
 observation_number = 1
+n = 0
 for set_up_point_name in set_up_points:
 	for observation in observations:
 		if observation.from_point.name == set_up_point_name:
@@ -89,6 +95,7 @@ for set_up_point_name in set_up_points:
 				row[1 + observation_number] = -1
 				A = numpy.vstack([A, row])
 			if observation.to_point.type_ == 'fixed':
+				n = n + 1
 				row[1 + observation_number] = -1
 				A = numpy.vstack([A, row])
 			observed = observation.value
@@ -97,4 +104,10 @@ for set_up_point_name in set_up_points:
 
 	observation_number = observation_number + 1
 
-print l
+
+X = ((A.T) * P * A).I * (A.T) * P * l
+V = (A * X) - l
+
+variance_factor = (V.T * V) / (n - (2 + number_of_set_ups) )
+
+print variance_factor

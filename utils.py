@@ -29,7 +29,9 @@ def get_set_up_points(observations):
 	from_points = []
 	for observation in observations:
 		from_points.append(observation.from_point.name)
-	return list(set(from_points))
+	from_points = list(set(from_points))
+	from_points.reverse()
+	return from_points
 
 def get_direction(coordinate1, coordinate2):
     delta_y = coordinate2.y - coordinate1.y
