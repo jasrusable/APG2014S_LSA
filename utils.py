@@ -1,5 +1,8 @@
 import math
 
+def fprint(thing_to_print, filename):
+    f = open(filename, 'w')
+    f.write(thing_to_print + '\n')
 
 def ddeg_to_rad (dms):   
     deg = float(dms[0])
