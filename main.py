@@ -3,8 +3,9 @@ import numpy
 from observations import Observation
 from coordinates import Coordinate
 from utils import get_coordiante_by_name, get_set_up_points, ddeg_to_rad, get_distance
-from utils import get_direction
+from utils import get_direction, fprint
 
+numpy.set_printoptions(linewidth=300, suppress=True)
 
 def read_coordinates_file(path='coordinates.txt'):
 	coordinates = []
@@ -78,7 +79,7 @@ for observation in observations:
         if observation.type_ == 'direction':    
                 P.itemset((i, i), 1)
         if observation.type_ == 'distance':    
-                P.itemset((i, i), 15625)
+                P.itemset((i, i), 15625 * 4)
         i = i + 1
 
 observation_number = 1
@@ -123,6 +124,16 @@ for observation in observations:
 
 X = ((A.T) * P * A).I * (A.T) * P * l
 V = (A * X) - l
+AtPA = A.T * P * A
+AtPL = A.T * P * l
 variance_factor = (V.T * V) / (n - (2 + number_of_set_ups) )
+sigma_X = float(variance_factor) * (AtPA).I
+sigma_L = float(variance_factor) * A * (AtPA).I * A.T
 
-print X
+fprint (str(sigma_X), 'sigma_x.txt')
+fprint (str(sigma_L), 'sigma_l.txt')
+fprint (str(A), 'A.txt')
+fprint (str(V), 'V.txt')
+fprint (str(l), 'l.txt')
+fprint (str(variance_factor), 'variance_factor.txt')
+fprint (str(X), 'X.txt')
