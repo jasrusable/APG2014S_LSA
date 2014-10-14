@@ -28,7 +28,8 @@ def get_set_up_points(observations):
 	number_of_unique_set_ups = None
 	from_points = []
 	for observation in observations:
-		from_points.append(observation.from_point.name)
+            if observation.type_ == 'direction':
+                from_points.append(observation.from_point.name)
 	from_points = list(set(from_points))
 	from_points.reverse()
 	return from_points
